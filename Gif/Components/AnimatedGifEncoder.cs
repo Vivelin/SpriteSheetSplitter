@@ -349,7 +349,8 @@ namespace Gif.Components
 			// get closest match to transparent color if specified
 			if (transparent != Color.Empty ) 
 			{
-				transIndex = FindClosest(transparent);
+				//transIndex = FindClosest(transparent);
+                transIndex = nq.Map(transparent.B, transparent.G, transparent.R);
 			}
 		}
 	
