@@ -19,13 +19,15 @@ namespace SpriteSheetSplitter
             var scaleFactor = args.Length > 2 ? float.Parse(args[2]) : 3.0f;
             var delay = args.Length > 3 ? int.Parse(args[3]) : 120;
 
+            var tileSize = new System.Drawing.Size(frameHeight, frameHeight);
+
             if (System.IO.File.Exists(fileName))
             {
                 var output = System.IO.Path.GetFileNameWithoutExtension(fileName) + ".gif";
-                using (var spritesheet = SpriteSheet.FromFile(fileName))
+                using (var spritesheet = SpriteSheet.FromFile(fileName, tileSize))
                 {
                     var framenum = 0;
-                    var frames = spritesheet.Split(frameHeight);
+                    var frames = spritesheet.Split();
 
                     using (var encoder = new Gif.Components.AnimatedGifEncoder(output))
                     {
@@ -40,8 +42,6 @@ namespace SpriteSheetSplitter
                             var name = string.Format("{0:0000}.png", framenum);
                             using (var scaled = Effects.Scale(item, scaleFactor))
                             {
-                                Trace.WriteLine(string.Format("Encoding frame {0}", framenum + 1));
-
                                 if (outputIndividualFrames)
                                 {
                                     scaled.Save(name, System.Drawing.Imaging.ImageFormat.Png);

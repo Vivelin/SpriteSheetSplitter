@@ -37,7 +37,7 @@ namespace Gif.Components
         protected int height;
         protected Color transparent = Color.Empty; // transparent color if given
         protected int transIndex; // transparent index in color table
-        protected int repeat = -1; // no repeat
+        protected int repeat = 0; // no repeat
         protected int delay = 0; // frame delay (hundredths of a second)
         protected bool started = false; // ready to output frames
         protected Stream stream;
