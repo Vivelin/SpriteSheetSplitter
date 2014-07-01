@@ -27,9 +27,9 @@ namespace SpriteSheetSplitter
 
                     var encoder = new Gif.Components.AnimatedGifEncoder();
                     encoder.Start(output);
-                    encoder.SetDelay(delay);
-                    encoder.SetTransparent(System.Drawing.Color.Black);
-                    encoder.SetRepeat(0);
+                    encoder.Delay = delay;
+                    encoder.TransparentColor = System.Drawing.Color.Black;
+                    encoder.Repeat = 0;
                     foreach (var item in frames)
                     {
                         var name = string.Format("{0:0000}.png", framenum);
