@@ -15,11 +15,12 @@ namespace SpriteSheetSplitter
             Trace.Listeners.Add(new ConsoleTraceListener(true));
 
             var fileName = args.Length > 0 ? args[0] : null;
-            var frameHeight = args.Length > 1 ? int.Parse(args[1]) : 16;
-            var scaleFactor = args.Length > 2 ? float.Parse(args[2]) : 3.0f;
-            var delay = args.Length > 3 ? int.Parse(args[3]) : 120;
+            var frameWidth = args.Length > 1 ? int.Parse(args[1]) : 16;
+            var frameHeight = args.Length > 2 ? int.Parse(args[2]) : 16;
+            var scaleFactor = args.Length > 3 ? float.Parse(args[3]) : 3.0f;
+            var delay = args.Length > 4 ? int.Parse(args[4]) : 80;
 
-            var tileSize = new System.Drawing.Size(frameHeight, frameHeight);
+            var tileSize = new System.Drawing.Size(frameWidth, frameHeight);
 
             if (System.IO.File.Exists(fileName))
             {

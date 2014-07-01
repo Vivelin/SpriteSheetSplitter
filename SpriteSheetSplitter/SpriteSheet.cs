@@ -89,7 +89,7 @@ namespace SpriteSheetSplitter
             if (x >= Columns) throw new IndexOutOfRangeException("x cannot exceed the number of columns");
             if (y >= Rows) throw new IndexOutOfRangeException("y cannot exceed the number of rows");
 
-            var origin = new Point(x * TileSize.Width, y * TileSize.Width);
+            var origin = new Point(x * TileSize.Width, y * TileSize.Height);
             var rect = new Rectangle(origin, TileSize);
             return bitmap.Clone(rect, bitmap.PixelFormat);
         }
