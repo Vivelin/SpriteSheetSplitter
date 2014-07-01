@@ -2,22 +2,7 @@ using System;
 using System.Drawing;
 using System.IO;
 
-#region .NET Disclaimer/Info
-//===============================================================================
-//
-// gOODiDEA, uland.com
-//===============================================================================
-//
-// $Header :		$  
-// $Author :		$
-// $Date   :		$
-// $Revision:		$
-// $History:		$  
-//  
-//===============================================================================
-#endregion 
-
-#region Java
+#region Original disclaimer
 /**
  * Class AnimatedGifEncoder - Encodes a GIF file consisting of one or
  * more frames.
@@ -43,6 +28,9 @@ using System.IO;
 
 namespace Gif.Components
 {
+    /// <summary>
+    /// Encodes a GIF file consisting of one or more frames.
+    /// </summary>
 	public class AnimatedGifEncoder
 	{
 		protected int width; // image size
@@ -68,23 +56,22 @@ namespace Gif.Components
 		protected bool sizeSet = false; // if false, get size from first frame
 		protected int sample = 10; // default sample interval for quantizer
 
-		/**
-		 * Sets the delay time between each frame, or changes it
-		 * for subsequent frames (applies to last frame added).
-		 *
-		 * @param ms int delay time in milliseconds
-		 */
+		/// <summary>
+		/// Sets the delay time between each frame, or changes it
+		/// for subsequent frames (applies to last frame added).
+		/// </summary>
+		/// <param name="ms">int delay time in milliseconds</param>
 		public void SetDelay(int ms) 
 		{
 			delay = ( int ) Math.Round(ms / 10.0f);
 		}
 	
-		/**
-		 * Sets the GIF frame disposal code for the last added frame
-		 * and any subsequent frames.  Default is 0 if no transparent
-		 * color has been set, otherwise 2.
-		 * @param code int disposal code.
-		 */
+		/// <summary>
+		/// Sets the GIF frame disposal code for the last added frame
+		/// and any subsequent frames.  Default is 0 if no transparent
+		/// color has been set, otherwise 2.
+		/// </summary>
+		/// <param name="code">int disposal code.</param>
 		public void SetDispose(int code) 
 		{
 			if (code >= 0) 
@@ -93,15 +80,13 @@ namespace Gif.Components
 			}
 		}
 	
-		/**
-		 * Sets the number of times the set of GIF frames
-		 * should be played.  Default is 1; 0 means play
-		 * indefinitely.  Must be invoked before the first
-		 * image is added.
-		 *
-		 * @param iter int number of iterations.
-		 * @return
-		 */
+		/// <summary>
+		/// Sets the number of times the set of GIF frames
+		/// should be played.  Default is 1; 0 means play
+		/// indefinitely.  Must be invoked before the first
+		/// image is added.
+		/// </summary>
+		/// <param name="iter">int number of iterations.</param>
 		public void SetRepeat(int iter) 
 		{
 			if (iter >= 0) 
@@ -110,32 +95,30 @@ namespace Gif.Components
 			}
 		}
 	
-		/**
-		 * Sets the transparent color for the last added frame
-		 * and any subsequent frames.
-		 * Since all colors are subject to modification
-		 * in the quantization process, the color in the final
-		 * palette for each frame closest to the given color
-		 * becomes the transparent color for that frame.
-		 * May be set to null to indicate no transparent color.
-		 *
-		 * @param c Color to be treated as transparent on display.
-		 */
+		/// <summary>
+		/// Sets the transparent color for the last added frame
+		/// and any subsequent frames.
+		/// Since all colors are subject to modification
+		/// in the quantization process, the color in the final
+		/// palette for each frame closest to the given color
+		/// becomes the transparent color for that frame.
+		/// May be set to null to indicate no transparent color.
+		/// </summary>
+		/// <param name="c">Color to be treated as transparent on display.</param>
 		public void SetTransparent(Color c) 
 		{
 			transparent = c;
 		}
 	
-		/**
-		 * Adds next GIF frame.  The frame is not written immediately, but is
-		 * actually deferred until the next frame is received so that timing
-		 * data can be inserted.  Invoking <code>finish()</code> flushes all
-		 * frames.  If <code>setSize</code> was not invoked, the size of the
-		 * first image is used for all subsequent frames.
-		 *
-		 * @param im BufferedImage containing frame to write.
-		 * @return true if successful.
-		 */
+		/// <summary>
+		/// Adds next GIF frame.  The frame is not written immediately, but is
+		/// actually deferred until the next frame is received so that timing
+		/// data can be inserted.  Invoking <code>finish()</code> flushes all
+		/// frames.  If <code>setSize</code> was not invoked, the size of the
+		/// first image is used for all subsequent frames.
+		/// </summary>
+		/// <param name="im">BufferedImage containing frame to write.</param>
+		/// <returns>True if successful.</returns>
 		public bool AddFrame(Image im) 
 		{
 			if ((im == null) || !started) 
@@ -180,11 +163,11 @@ namespace Gif.Components
 			return ok;
 		}
 	
-		/**
-		 * Flushes any pending data and closes output file.
-		 * If writing to an OutputStream, the stream is not
-		 * closed.
-		 */
+		/// <summary>
+		/// Flushes any pending data and closes output file.
+		/// If writing to an OutputStream, the stream is not
+		/// closed.
+		/// </summary>
 		public bool Finish() 
 		{
 			if (!started) return false;
@@ -217,12 +200,11 @@ namespace Gif.Components
 			return ok;
 		}
 	
-		/**
-		 * Sets frame rate in frames per second.  Equivalent to
-		 * <code>setDelay(1000/fps)</code>.
-		 *
-		 * @param fps float frame rate (frames per second)
-		 */
+		/// <summary>
+		/// Sets frame rate in frames per second.  Equivalent to
+		/// <code>setDelay(1000/fps)</code>.
+		/// </summary>
+		/// <param name="fps">float frame rate (frames per second)</param>
 		public void SetFrameRate(float fps) 
 		{
 			if (fps != 0f) 
@@ -231,31 +213,28 @@ namespace Gif.Components
 			}
 		}
 	
-		/**
-		 * Sets quality of color quantization (conversion of images
-		 * to the maximum 256 colors allowed by the GIF specification).
-		 * Lower values (minimum = 1) produce better colors, but slow
-		 * processing significantly.  10 is the default, and produces
-		 * good color mapping at reasonable speeds.  Values greater
-		 * than 20 do not yield significant improvements in speed.
-		 *
-		 * @param quality int greater than 0.
-		 * @return
-		 */
+		/// <summary>
+		/// Sets quality of color quantization (conversion of images
+		/// to the maximum 256 colors allowed by the GIF specification).
+		/// Lower values (minimum = 1) produce better colors, but slow
+		/// processing significantly.  10 is the default, and produces
+		/// good color mapping at reasonable speeds.  Values greater
+		/// than 20 do not yield significant improvements in speed.
+		/// </summary>
+		/// <param name="quality">int greater than 0.</param>
 		public void SetQuality(int quality) 
 		{
 			if (quality < 1) quality = 1;
 			sample = quality;
 		}
 	
-		/**
-		 * Sets the GIF frame size.  The default size is the
-		 * size of the first frame added if this method is
-		 * not invoked.
-		 *
-		 * @param w int frame width.
-		 * @param h int frame width.
-		 */
+		/// <summary>
+		/// Sets the GIF frame size.  The default size is the
+		/// size of the first frame added if this method is
+		/// not invoked.
+		/// </summary>
+		/// <param name="w">int frame width.</param>
+		/// <param name="h">int frame width.</param>
 		public void SetSize(int w, int h) 
 		{
 			if (started && !firstFrame) return;
@@ -266,13 +245,12 @@ namespace Gif.Components
 			sizeSet = true;
 		}
 	
-		/**
-		 * Initiates GIF file creation on the given stream.  The stream
-		 * is not closed automatically.
-		 *
-		 * @param os OutputStream on which GIF images are written.
-		 * @return false if initial write failed.
-		 */
+		/// <summary>
+		/// Initiates GIF file creation on the given stream.  The stream
+		/// is not closed automatically.
+		/// </summary>
+		/// <param name="os">OutputStream on which GIF images are written.</param>
+		/// <returns>false if initial write failed.</returns>
 		public bool Start( FileStream os) 
 		{
 			if (os == null) return false;
@@ -290,12 +268,11 @@ namespace Gif.Components
 			return started = ok;
 		}
 	
-		/**
-		 * Initiates writing of a GIF file with the specified name.
-		 *
-		 * @param file String containing output file name.
-		 * @return false if open or initial write failed.
-		 */
+		/// <summary>
+		/// Initiates writing of a GIF file with the specified name.
+		/// </summary>
+		/// <param name="file">String containing output file name.</param>
+		/// <returns>false if open or initial write failed.</returns>
 		public bool Start(String file) 
 		{
 			bool ok = true;
@@ -313,9 +290,9 @@ namespace Gif.Components
 			return started = ok;
 		}
 	
-		/**
-		 * Analyzes image colors and creates color map.
-		 */
+		/// <summary>
+		/// Analyzes image colors and creates color map.
+		/// </summary>
 		protected void AnalyzePixels() 
 		{
 			int len = pixels.Length;
@@ -354,10 +331,9 @@ namespace Gif.Components
 			}
 		}
 	
-		/**
-		 * Returns index of palette color closest to c
-		 *
-		 */
+		/// <summary>
+		/// Returns index of palette color closest to c
+		/// </summary>
 		protected int FindClosest(Color c) 
 		{
 			if (colorTab == null) return -1;
@@ -384,9 +360,9 @@ namespace Gif.Components
 			return minpos;
 		}
 	
-		/**
-		 * Extracts image pixels into byte array "pixels"
-		 */
+		/// <summary>
+		/// Extracts image pixels into byte array "pixels"
+		/// </summary>
 		protected void GetImagePixels() 
 		{
 			int w = image.Width;
@@ -428,9 +404,9 @@ namespace Gif.Components
 			//		pixels = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
 		}
 	
-		/**
-		 * Writes Graphic Control Extension
-		 */
+		/// <summary>
+		/// Writes Graphic Control Extension
+		/// </summary>
 		protected void WriteGraphicCtrlExt() 
 		{
 			fs.WriteByte(0x21); // extension introducer
@@ -464,9 +440,9 @@ namespace Gif.Components
 			fs.WriteByte(0); // block terminator
 		}
 	
-		/**
-		 * Writes Image Descriptor
-		 */
+		/// <summary>
+		/// Writes Image Descriptor
+		/// </summary>
 		protected void WriteImageDesc()
 		{
 			fs.WriteByte(0x2c); // image separator
@@ -491,9 +467,9 @@ namespace Gif.Components
 			}
 		}
 	
-		/**
-		 * Writes Logical Screen Descriptor
-		 */
+		/// <summary>
+		/// Writes Logical Screen Descriptor
+		/// </summary>
 		protected void WriteLSD()  
 		{
 			// logical screen size
@@ -509,10 +485,10 @@ namespace Gif.Components
 			fs.WriteByte(0); // pixel aspect ratio - assume 1:1
 		}
 	
-		/**
-		 * Writes Netscape application extension to define
-		 * repeat count.
-		 */
+		/// <summary>
+		/// Writes Netscape application extension to define
+		/// repeat count.
+		/// </summary>
 		protected void WriteNetscapeExt()
 		{
 			fs.WriteByte(0x21); // extension introducer
@@ -525,9 +501,9 @@ namespace Gif.Components
 			fs.WriteByte(0); // block terminator
 		}
 	
-		/**
-		 * Writes color table
-		 */
+		/// <summary>
+		/// Writes color table
+		/// </summary>
 		protected void WritePalette()
 		{
 			fs.Write(colorTab, 0, colorTab.Length);
@@ -538,9 +514,9 @@ namespace Gif.Components
 			}
 		}
 	
-		/**
-		 * Encodes and writes pixel data
-		 */
+		/// <summary>
+		/// Encodes and writes pixel data
+		/// </summary>
 		protected void WritePixels()
 		{
 			LZWEncoder encoder =
@@ -548,18 +524,18 @@ namespace Gif.Components
 			encoder.Encode( fs );
 		}
 	
-		/**
-		 *    Write 16-bit value to output stream, LSB first
-		 */
+		/// <summary>
+		/// Write 16-bit value to output stream, LSB first
+		/// </summary>
 		protected void WriteShort(int value)
 		{
 			fs.WriteByte( Convert.ToByte( value & 0xff));
 			fs.WriteByte( Convert.ToByte( (value >> 8) & 0xff ));
 		}
 	
-		/**
-		 * Writes string to output stream
-		 */
+		/// <summary>
+		/// Writes string to output stream
+		/// </summary>
 		protected void WriteString(String s)
 		{
 			char[] chars = s.ToCharArray();
