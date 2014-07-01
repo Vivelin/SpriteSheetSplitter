@@ -31,7 +31,7 @@ namespace Gif.Components
     /// <summary>
     /// Encodes a GIF file consisting of one or more frames.
     /// </summary>
-    public class AnimatedGifEncoder
+    public class AnimatedGifEncoder : IDisposable
     {
         protected int width; // image size
         protected int height;
@@ -40,8 +40,7 @@ namespace Gif.Components
         protected int repeat = -1; // no repeat
         protected int delay = 0; // frame delay (hundredths of a second)
         protected bool started = false; // ready to output frames
-        //	protected BinaryWriter bw;
-        protected FileStream fs;
+        protected Stream stream;
 
         protected Image image; // current frame
         protected byte[] pixels; // BGR byte array from frame
@@ -55,6 +54,36 @@ namespace Gif.Components
         protected bool firstFrame = true;
         protected bool sizeSet = false; // if false, get size from first frame
         protected int sample = 10; // default sample interval for quantizer
+
+        /// <summary>
+        /// Initializes a new instance of the AnimatedGifEncoder class for the specified stream.
+        /// </summary>
+        /// <param name="stream">The stream to write to.</param>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name="stream"/> is null.</exception>
+        /// <exception cref="T:System.ArgumentException"><paramref name="stream"/> is not writable.</exception>
+        public AnimatedGifEncoder(Stream stream)
+        {
+            if (stream == null) throw new ArgumentNullException("stream");
+            if (!stream.CanWrite) throw new ArgumentException("Stream is not writable", "stream");
+
+            Init(stream);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the AnimatedGifEncoder class for the specified file. If 
+        /// the file already exists, it will be overwritten.
+        /// </summary>
+        /// <param name="path">The file path to write to.</param>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name="path"/> is null.</exception>
+        /// <exception cref="T:System.ArgumentException"><paramref name="path"/> is empty.</exception>
+        public AnimatedGifEncoder(string path)
+        {
+            if (path == null) throw new ArgumentNullException("path");
+            if (path.Length == 0) throw new ArgumentException("Path cannot be empty");
+
+            var stream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.Read);
+            Init(stream);
+        }
 
         /// <summary>
         /// Gets or sets the delay time in milliseconds between each frame for the last frame 
@@ -72,7 +101,7 @@ namespace Gif.Components
         /// </summary>
         public float FrameRate
         {
-            get { return (float)(delay / 100f); }
+            get { return (float)(100f / delay); }
             set
             {
                 if (value > 0)
@@ -144,98 +173,6 @@ namespace Gif.Components
         }
 
         /// <summary>
-        /// Adds next GIF frame.
-        /// </summary>
-        /// <param name="im">The <see cref="System.Drawing.Image"/> containing frame to write.</param>
-        /// <returns>True if successful.</returns>
-        /// <remarks>
-        /// The frame is not written immediately, but is actually deferred until the next frame is 
-        /// received so that timing data can be inserted. Invoking <c>Finish()</c> flushes all 
-        /// frames. If <c>Size</c> was not set, the size of the first frame is used for all 
-        /// subsequent frames.
-        /// </remarks>
-        public bool AddFrame(Image im)
-        {
-            if ((im == null) || !started)
-            {
-                return false;
-            }
-            bool ok = true;
-            try
-            {
-                if (!sizeSet)
-                {
-                    // use first frame's size
-                    SetSize(im.Width, im.Height);
-                }
-                image = im;
-                GetImagePixels(); // convert to correct format if necessary
-                AnalyzePixels(); // build color table & map pixels
-                if (firstFrame)
-                {
-                    WriteLSD(); // logical screen descriptior
-                    WritePalette(); // global color table
-                    if (repeat >= 0)
-                    {
-                        // use NS app extension to indicate reps
-                        WriteNetscapeExt();
-                    }
-                }
-                WriteGraphicCtrlExt(); // write graphic control extension
-                WriteImageDesc(); // image descriptor
-                if (!firstFrame)
-                {
-                    WritePalette(); // local color table
-                }
-                WritePixels(); // encode and write pixel data
-                firstFrame = false;
-            }
-            catch (IOException e)
-            {
-                ok = false;
-            }
-
-            return ok;
-        }
-
-        /// <summary>
-        /// Flushes any pending data and closes output file.
-        /// If writing to an OutputStream, the stream is not
-        /// closed.
-        /// </summary>
-        public bool Finish()
-        {
-            if (!started) return false;
-            bool ok = true;
-            started = false;
-            try
-            {
-                fs.WriteByte(0x3b); // gif trailer
-                fs.Flush();
-                if (closeStream)
-                {
-                    fs.Close();
-                }
-            }
-            catch (IOException e)
-            {
-                ok = false;
-            }
-
-            // reset for subsequent use
-            transIndex = 0;
-            fs = null;
-            image = null;
-            pixels = null;
-            indexedPixels = null;
-            colorTab = null;
-            closeStream = false;
-            firstFrame = true;
-
-            return ok;
-        }
-
-        /// <summary>
         /// Sets the GIF frame size. The default size is the size of the first frame added if this 
         /// method is not invoked.
         /// </summary>
@@ -252,48 +189,75 @@ namespace Gif.Components
         }
 
         /// <summary>
-        /// Initiates GIF file creation on the given stream.  The stream
-        /// is not closed automatically.
+        /// Adds next GIF frame.
         /// </summary>
-        /// <param name="os">OutputStream on which GIF images are written.</param>
-        /// <returns>false if initial write failed.</returns>
-        public bool Start(FileStream os)
+        /// <param name="im">The <see cref="System.Drawing.Image"/> containing frame to write.</param>
+        /// <remarks>
+        /// The frame is not written immediately, but is actually deferred until the next frame is 
+        /// received so that timing data can be inserted. Invoking <c>Finish()</c> flushes all 
+        /// frames. If <c>Size</c> was not set, the size of the first frame is used for all 
+        /// subsequent frames.
+        /// </remarks>
+        public void AddFrame(Image im)
         {
-            if (os == null) return false;
-            bool ok = true;
-            closeStream = false;
-            fs = os;
-            try
+            if (im == null) throw new ArgumentNullException("im");
+            if (!started) throw new InvalidOperationException("Stream is not open");
+
+            if (!sizeSet)
             {
-                WriteString("GIF89a"); // header
+                // use first frame's size
+                SetSize(im.Width, im.Height);
             }
-            catch (IOException e)
+            image = im;
+            GetImagePixels(); // convert to correct format if necessary
+            AnalyzePixels(); // build color table & map pixels
+            if (firstFrame)
             {
-                ok = false;
+                WriteLSD(); // logical screen descriptior
+                WritePalette(); // global color table
+                if (repeat >= 0)
+                {
+                    // use NS app extension to indicate reps
+                    WriteNetscapeExt();
+                }
             }
-            return started = ok;
+            WriteGraphicCtrlExt(); // write graphic control extension
+            WriteImageDesc(); // image descriptor
+            if (!firstFrame)
+            {
+                WritePalette(); // local color table
+            }
+            WritePixels(); // encode and write pixel data
+            firstFrame = false;
         }
 
         /// <summary>
-        /// Initiates writing of a GIF file with the specified name.
+        /// Flushes any pending data and closes the underlying stream.
         /// </summary>
-        /// <param name="file">String containing output file name.</param>
-        /// <returns>false if open or initial write failed.</returns>
-        public bool Start(String file)
+        public void Close()
         {
-            bool ok = true;
-            try
-            {
-                //			bw = new BinaryWriter( new FileStream( file, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None ) );
-                fs = new FileStream(file, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None);
-                ok = Start(fs);
-                closeStream = true;
-            }
-            catch (IOException e)
-            {
-                ok = false;
-            }
-            return started = ok;
+            Dispose();
+        }
+
+        /// <summary>
+        /// Releases the resources used by this class.
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// Initializes the instance for the specified stream and writes the GIF header.
+        /// </summary>
+        /// <param name="stream">The stream to write to.</param>
+        protected void Init(Stream stream)
+        {
+            this.stream = stream;
+
+            WriteString("GIF89a"); // header
+            started = true;
         }
 
         /// <summary>
@@ -415,9 +379,9 @@ namespace Gif.Components
         /// </summary>
         protected void WriteGraphicCtrlExt()
         {
-            fs.WriteByte(0x21); // extension introducer
-            fs.WriteByte(0xf9); // GCE label
-            fs.WriteByte(4); // data block size
+            stream.WriteByte(0x21); // extension introducer
+            stream.WriteByte(0xf9); // GCE label
+            stream.WriteByte(4); // data block size
             int transp, disp;
             if (transparent == Color.Empty)
             {
@@ -436,14 +400,14 @@ namespace Gif.Components
             disp <<= 2;
 
             // packed fields
-            fs.WriteByte(Convert.ToByte(0 | // 1:3 reserved
+            stream.WriteByte(Convert.ToByte(0 | // 1:3 reserved
                 disp | // 4:6 disposal
                 0 | // 7   user input - 0 = none
                 transp)); // 8   transparency flag
 
             WriteShort(delay); // delay x 1/100 sec
-            fs.WriteByte(Convert.ToByte(transIndex)); // transparent color index
-            fs.WriteByte(0); // block terminator
+            stream.WriteByte(Convert.ToByte(transIndex)); // transparent color index
+            stream.WriteByte(0); // block terminator
         }
 
         /// <summary>
@@ -451,7 +415,7 @@ namespace Gif.Components
         /// </summary>
         protected void WriteImageDesc()
         {
-            fs.WriteByte(0x2c); // image separator
+            stream.WriteByte(0x2c); // image separator
             WriteShort(0); // image position x,y = 0,0
             WriteShort(0);
             WriteShort(width); // image size
@@ -460,12 +424,12 @@ namespace Gif.Components
             if (firstFrame)
             {
                 // no LCT  - GCT is used for first (or only) frame
-                fs.WriteByte(0);
+                stream.WriteByte(0);
             }
             else
             {
                 // specify normal LCT
-                fs.WriteByte(Convert.ToByte(0x80 | // 1 local color table  1=yes
+                stream.WriteByte(Convert.ToByte(0x80 | // 1 local color table  1=yes
                     0 | // 2 interlace - 0=no
                     0 | // 3 sorted - 0=no
                     0 | // 4-5 reserved
@@ -482,13 +446,13 @@ namespace Gif.Components
             WriteShort(width);
             WriteShort(height);
             // packed fields
-            fs.WriteByte(Convert.ToByte(0x80 | // 1   : global color table flag = 1 (gct used)
+            stream.WriteByte(Convert.ToByte(0x80 | // 1   : global color table flag = 1 (gct used)
                 0x70 | // 2-4 : color resolution = 7
                 0x00 | // 5   : gct sort flag = 0
                 palSize)); // 6-8 : gct size
 
-            fs.WriteByte(0); // background color index
-            fs.WriteByte(0); // pixel aspect ratio - assume 1:1
+            stream.WriteByte(0); // background color index
+            stream.WriteByte(0); // pixel aspect ratio - assume 1:1
         }
 
         /// <summary>
@@ -497,14 +461,14 @@ namespace Gif.Components
         /// </summary>
         protected void WriteNetscapeExt()
         {
-            fs.WriteByte(0x21); // extension introducer
-            fs.WriteByte(0xff); // app extension label
-            fs.WriteByte(11); // block size
+            stream.WriteByte(0x21); // extension introducer
+            stream.WriteByte(0xff); // app extension label
+            stream.WriteByte(11); // block size
             WriteString("NETSCAPE" + "2.0"); // app id + auth code
-            fs.WriteByte(3); // sub-block size
-            fs.WriteByte(1); // loop sub-block id
+            stream.WriteByte(3); // sub-block size
+            stream.WriteByte(1); // loop sub-block id
             WriteShort(repeat); // loop count (extra iterations, 0=repeat forever)
-            fs.WriteByte(0); // block terminator
+            stream.WriteByte(0); // block terminator
         }
 
         /// <summary>
@@ -512,11 +476,11 @@ namespace Gif.Components
         /// </summary>
         protected void WritePalette()
         {
-            fs.Write(colorTab, 0, colorTab.Length);
+            stream.Write(colorTab, 0, colorTab.Length);
             int n = (3 * 256) - colorTab.Length;
             for (int i = 0; i < n; i++)
             {
-                fs.WriteByte(0);
+                stream.WriteByte(0);
             }
         }
 
@@ -527,7 +491,7 @@ namespace Gif.Components
         {
             LZWEncoder encoder =
                 new LZWEncoder(width, height, indexedPixels, colorDepth);
-            encoder.Encode(fs);
+            encoder.Encode(stream);
         }
 
         /// <summary>
@@ -535,8 +499,8 @@ namespace Gif.Components
         /// </summary>
         protected void WriteShort(int value)
         {
-            fs.WriteByte(Convert.ToByte(value & 0xff));
-            fs.WriteByte(Convert.ToByte((value >> 8) & 0xff));
+            stream.WriteByte(Convert.ToByte(value & 0xff));
+            stream.WriteByte(Convert.ToByte((value >> 8) & 0xff));
         }
 
         /// <summary>
@@ -547,7 +511,36 @@ namespace Gif.Components
             char[] chars = s.ToCharArray();
             for (int i = 0; i < chars.Length; i++)
             {
-                fs.WriteByte((byte)chars[i]);
+                stream.WriteByte((byte)chars[i]);
+            }
+        }
+
+        /// <summary>
+        /// Optionally releases the managed resources used by this class.
+        /// </summary>
+        /// <param name="disposing">True to release managed resources.</param>
+        protected void Dispose(bool disposing)
+        {
+            try
+            {
+                if (disposing && stream != null)
+                {
+                    started = false;
+
+                    stream.WriteByte(0x3b); // gif trailer
+                    stream.Flush();
+                    stream.Close();
+                    stream = null;
+                }
+            }
+            finally
+            {
+                if (disposing && stream != null)
+                {
+                    started = false;
+                    stream.Close();
+                    stream = null;
+                }
             }
         }
 
