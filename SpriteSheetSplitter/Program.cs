@@ -41,7 +41,7 @@ namespace SpriteSheetSplitter
                         foreach (var item in frames)
                         {
                             var name = string.Format("{0:0000}.png", framenum);
-                            using (var scaled = Effects.Scale(item, scaleFactor))
+                            using (var scaled = item.Scale(scaleFactor))
                             {
                                 if (outputIndividualFrames)
                                 {
