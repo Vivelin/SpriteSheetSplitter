@@ -361,7 +361,7 @@ namespace Gif.Components
             {
                 for (int tw = 0; tw < image.Width; tw++)
                 {
-                    Color color = tempBitmap.GetPixel(tw, th);
+                    Color color = Blend(tempBitmap.GetPixel(tw, th));                    
                     pixels[count] = color.R;
                     count++;
                     pixels[count] = color.G;
@@ -372,6 +372,25 @@ namespace Gif.Components
             }
 
             //		pixels = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
+        }
+
+        /// <summary>
+        /// Alpha-blends a color with the transparent color.
+        /// </summary>
+        /// <param name="value">The color to blend with.</param>
+        /// <returns>A new <c>Color</c>.</returns>
+        protected Color Blend(Color value)
+        {
+            if (value.A == 255) return value;
+            else if (value.A == 0) return TransparentColor;
+            else
+            {
+                var alpha = (value.A / 255f);
+                var r = (byte)(alpha * (float)value.R) + (byte)((1 - alpha) * (float)TransparentColor.R);
+                var g = (byte)(alpha * (float)value.G) + (byte)((1 - alpha) * (float)TransparentColor.G);
+                var b = (byte)(alpha * (float)value.B) + (byte)((1 - alpha) * (float)TransparentColor.B);
+                return Color.FromArgb(255, r, g, b);
+            }
         }
 
         /// <summary>

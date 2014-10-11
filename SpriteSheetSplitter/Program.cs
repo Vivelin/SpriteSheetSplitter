@@ -33,7 +33,7 @@ namespace SpriteSheetSplitter
                     using (var encoder = new Gif.Components.AnimatedGifEncoder(output))
                     {
                         encoder.Delay = delay;
-                        encoder.TransparentColor = System.Drawing.Color.Black;
+                        encoder.TransparentColor = System.Drawing.Color.Violet;
                         encoder.Repeat = 0;
 
                         Trace.WriteLine(string.Format("Framerate set to {0:F1} FPS ({1} ms delay)", encoder.FrameRate, encoder.Delay));
