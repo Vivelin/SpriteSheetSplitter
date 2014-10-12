@@ -25,7 +25,7 @@ namespace SpriteSheetSplitter
         /// animation's frames.</param>
         public Animation(SpriteSheet source)
         {
-            SpriteSheet = source;
+            spriteSheet = source;
         }
 
         /// <summary>

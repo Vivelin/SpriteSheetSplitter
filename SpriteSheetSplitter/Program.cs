@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using SpriteSheetSplitter.Transformations;
 
 namespace SpriteSheetSplitter
 {
@@ -37,11 +38,13 @@ namespace SpriteSheetSplitter
                         }
 
                         var name = string.Format("{0:0000}.png", e.Index);
-                        var image = e.Frame.Scale(scaleFactor);
+                        var image = e.Frame;
+                        var transformation = new ScaleTransformation(scaleFactor);
+
+                        transformation.ApplyTo(ref image);
                         if (outputIndividualFrames)
-                        {
                             image.Save(name, System.Drawing.Imaging.ImageFormat.Png);
-                        }
+
                         e.Frame = image;
                     };
 
