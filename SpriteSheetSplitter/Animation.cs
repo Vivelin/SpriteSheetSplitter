@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SpriteSheetSplitter.Transformations;
 
 namespace SpriteSheetSplitter
 {
@@ -52,9 +53,19 @@ namespace SpriteSheetSplitter
         public event EventHandler TransparentColorChanged;
 
         /// <summary>
-        /// Occurs before a frame is being rendered.
+        /// Occurs before a frame is transformed.
+        /// </summary>
+        public event FrameEventHandler TransformingFrame;				
+
+        /// <summary>
+        /// Occurs before a frame is encoded.
         /// </summary>
         public event FrameEventHandler AddingFrame;
+
+        /// <summary>
+        /// Gets or sets a transformation that is applied to each frame.
+        /// </summary>
+        public Transformation Transformation { get; set; }
 
         /// <summary>
         /// Gets or sets the <see cref="SpriteSheet"/> object that acts as the
@@ -144,17 +155,16 @@ namespace SpriteSheetSplitter
                 encoder.TransparentColor = TransparentColor;
                 encoder.Repeat = 0;
 
-                // Gross.
                 var frames = GetFrames();
-                var e = frames.GetEnumerator();
                 var i = 0;
-                while (e.MoveNext())
+                foreach (var item in frames)
                 {
-                    var frame = e.Current;
+                    var frame = item; // Workaround for `ref`
 
-                    if (!OnAddingFrame(ref frame, i))
-                        break;
+                    OnTransformingFrame(frame, i);
+                    Transformation.ApplyTo(ref frame);
 
+                    if (!OnAddingFrame(frame, i)) break;
                     encoder.AddFrame(frame);
 
                     frame.Dispose();
@@ -226,17 +236,29 @@ namespace SpriteSheetSplitter
         /// </summary>
         /// <returns><c>false</c> if the animation should be stopped before the
         /// frame is added to the animation, <c>true</c> otherwise.</returns>
-        protected virtual bool OnAddingFrame(ref Image frame, int index)
+        protected virtual bool OnAddingFrame(Image frame, int index)
         {
             var handler = AddingFrame;
             if (handler != null)
             {
                 var args = new FrameEventArgs(frame, index);
                 handler(this, args);
-                frame = args.Frame;
                 return !args.Cancel;
             }
             return true;
         }
+
+        /// <summary>
+        /// Raises the <see cref="TransformingFrame"/> event.
+        /// </summary>
+        protected virtual void OnTransformingFrame(Image frame, int index)
+        {
+            var handler = TransformingFrame;
+            if (handler != null)
+            {
+                var args = new FrameEventArgs(frame, index);
+                handler(this, args);
+            }
+        }	
     }
 }

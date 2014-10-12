@@ -37,17 +37,14 @@ namespace SpriteSheetSplitter
                             return;
                         }
 
-                        var name = string.Format("{0:0000}.png", e.Index);
-                        var image = e.Frame;
-                        var transformation = new ScaleTransformation(scaleFactor);
-
-                        transformation.ApplyTo(ref image);
                         if (outputIndividualFrames)
-                            image.Save(name, System.Drawing.Imaging.ImageFormat.Png);
-
-                        e.Frame = image;
+                        {
+                            var name = string.Format("{0:0000}.png", e.Index);
+                            e.Frame.Save(name, System.Drawing.Imaging.ImageFormat.Png);
+                        }
                     };
 
+                    anim.Transformation = new ScaleTransformation(scaleFactor);
                     anim.Delay = delay;
                     anim.TransparentColor = System.Drawing.Color.Violet;
                     anim.Save(output);
