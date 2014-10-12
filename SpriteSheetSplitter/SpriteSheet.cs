@@ -10,7 +10,7 @@ namespace SpriteSheetSplitter
     /// <summary>
     /// Represents an image consisting of multiple tiles or sprites.
     /// </summary>
-    class SpriteSheet : IDisposable
+    public class SpriteSheet : IDisposable
     {
         private Bitmap bitmap;
         private Size tileSize;

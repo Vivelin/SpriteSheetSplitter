@@ -26,36 +26,28 @@ namespace SpriteSheetSplitter
             {
                 var output = System.IO.Path.GetFileNameWithoutExtension(fileName) + ".gif";
                 using (var spritesheet = SpriteSheet.FromFile(fileName, tileSize))
+                using (var anim = new Animation(spritesheet))
                 {
-                    var framenum = 0;
-                    var frames = spritesheet.Split();
-
-                    using (var encoder = new Gif.Components.AnimatedGifEncoder(output))
+                    anim.AddingFrame += (sender, e) =>
                     {
-                        encoder.Delay = delay;
-                        encoder.TransparentColor = System.Drawing.Color.Violet;
-                        encoder.Repeat = 0;
-
-                        Trace.WriteLine(string.Format("Framerate set to {0:F1} FPS ({1} ms delay)", encoder.FrameRate, encoder.Delay));
-
-                        foreach (var item in frames)
+                        if (e.Index == 2)
                         {
-                            var name = string.Format("{0:0000}.png", framenum);
-                            using (var scaled = item.Scale(scaleFactor))
-                            {
-                                if (outputIndividualFrames)
-                                {
-                                    scaled.Save(name, System.Drawing.Imaging.ImageFormat.Png);
-                                }
-
-                                encoder.AddFrame(scaled);
-                            }
-
-                            item.Dispose();
-                            framenum++;
+                            e.Cancel = true;
+                            return;
                         }
 
-                    }
+                        var name = string.Format("{0:0000}.png", e.Index);
+                        var image = e.Frame.Scale(scaleFactor);
+                        if (outputIndividualFrames)
+                        {
+                            image.Save(name, System.Drawing.Imaging.ImageFormat.Png);
+                        }
+                        e.Frame = image;
+                    };
+
+                    anim.Delay = delay;
+                    anim.TransparentColor = System.Drawing.Color.Violet;
+                    anim.Save(output);
                 }
 
                 Trace.WriteLine("Done.");
