@@ -67,6 +67,14 @@ namespace SpriteSheetSplitter
         }
 
         /// <summary>
+        /// Gets the <see cref="Bitmap"/> image.
+        /// </summary>
+        public Bitmap Bitmap
+        {
+            get { return bitmap; }
+        }
+
+        /// <summary>
         /// Creates a SpriteSheet from the specified file using the specific tile size.
         /// </summary>
         /// <param name="path">The full path to the file to open.</param>
@@ -86,8 +94,8 @@ namespace SpriteSheetSplitter
         /// <returns>A new <see cref="T:System.Drawing.Bitmap"/> containing the specified tile.</returns>
         public Bitmap GetTile(int x, int y)
         {
-            if (x >= Columns) throw new IndexOutOfRangeException("x cannot exceed the number of columns");
-            if (y >= Rows) throw new IndexOutOfRangeException("y cannot exceed the number of rows");
+            if (x >= Columns) throw new ArgumentOutOfRangeException("x", "x cannot exceed the number of columns");
+            if (y >= Rows) throw new ArgumentOutOfRangeException("y", "y cannot exceed the number of rows");
 
             var origin = new Point(x * TileSize.Width, y * TileSize.Height);
             var rect = new Rectangle(origin, TileSize);
