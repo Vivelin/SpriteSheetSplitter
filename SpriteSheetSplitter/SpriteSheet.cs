@@ -19,11 +19,9 @@ namespace SpriteSheetSplitter
         /// Initializes a new instance of the SpriteSheet class for the specified bitmap using a specific tile size.
         /// </summary>
         /// <param name="bitmap">A <see cref="T:System.Drawing.Bitmap"/> that contains the sprite sheet image.</param>
-        /// <param name="tileSize">A <see cref="T:System.Drawing.Size"/> containing the dimensions of each individual tile.</param>
-        public SpriteSheet(Bitmap bitmap, Size tileSize)
+        public SpriteSheet(Bitmap bitmap)
         {
             this.bitmap = bitmap;
-            this.TileSize = tileSize;
         }
 
         /// <summary>
@@ -78,12 +76,11 @@ namespace SpriteSheetSplitter
         /// Creates a SpriteSheet from the specified file using the specific tile size.
         /// </summary>
         /// <param name="path">The full path to the file to open.</param>
-        /// <param name="tileSize">The size of each individual sprite in the sprite sheet.</param>
         /// <returns>A new SpriteSheet instance for the specified file.</returns>
-        public static SpriteSheet FromFile(string path, Size tileSize)
+        public static SpriteSheet FromFile(string path)
         {
             Bitmap bitmap = Bitmap.FromFile(path) as Bitmap;
-            return new SpriteSheet(bitmap, tileSize);
+            return new SpriteSheet(bitmap);
         }
 
         /// <summary>

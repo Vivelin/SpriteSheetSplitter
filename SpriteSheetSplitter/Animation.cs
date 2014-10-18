@@ -15,8 +15,8 @@ namespace SpriteSheetSplitter
     public class Animation : IDisposable
     {
         private SpriteSheet spriteSheet;
-        private int delay;
-        private Color transparentColor;
+        private int delay = 80;
+        private Color transparentColor = Color.Violet;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Animation"/> class,
@@ -161,8 +161,11 @@ namespace SpriteSheetSplitter
                 {
                     var frame = item; // Workaround for `ref`
 
-                    OnTransformingFrame(frame, i);
-                    Transformation.ApplyTo(ref frame);
+                    if (Transformation != null)
+                    {
+                        OnTransformingFrame(frame, i);
+                        Transformation.ApplyTo(ref frame);
+                    }
 
                     if (!OnAddingFrame(frame, i)) break;
                     encoder.AddFrame(frame);

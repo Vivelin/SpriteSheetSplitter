@@ -26,9 +26,10 @@ namespace SpriteSheetSplitter
             if (System.IO.File.Exists(fileName))
             {
                 var output = System.IO.Path.GetFileNameWithoutExtension(fileName) + ".gif";
-                using (var spritesheet = SpriteSheet.FromFile(fileName, tileSize))
+                using (var spritesheet = SpriteSheet.FromFile(fileName))
                 using (var anim = new Animation(spritesheet))
                 {
+                    spritesheet.TileSize = tileSize;
                     anim.AddingFrame += (sender, e) =>
                     {
                         if (e.Index == 2)

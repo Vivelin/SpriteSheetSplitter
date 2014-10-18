@@ -548,8 +548,8 @@ namespace Gif.Components
 
                     stream.WriteByte(0x3b); // gif trailer
                     stream.Flush();
-                    stream.Close();
-                    stream = null;
+                    // stream.Close();
+                    // stream = null;
                 }
             }
             finally
@@ -557,8 +557,8 @@ namespace Gif.Components
                 if (disposing && stream != null)
                 {
                     started = false;
-                    stream.Close();
-                    stream = null;
+                    // stream.Close();
+                    // stream = null;
                 }
             }
         }

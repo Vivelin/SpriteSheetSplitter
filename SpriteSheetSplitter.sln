@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpriteSheetSplitter", "Spri
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Components", "Gif\Components\Components.csproj", "{1C3A03CA-5E55-4CC4-9746-194A4188960A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpriteSheetSplitter.UI", "SpriteSheetSplitter.UI\SpriteSheetSplitter.UI.csproj", "{3ED01B4E-F705-475F-ADF1-15D98A1CFFFF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpriteSheetSplitter.UI.Controls", "SpriteSheetSplitter.UI.Controls\SpriteSheetSplitter.UI.Controls.csproj", "{87F70365-38DD-4F51-B94A-C81147EE3914}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{1C3A03CA-5E55-4CC4-9746-194A4188960A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1C3A03CA-5E55-4CC4-9746-194A4188960A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1C3A03CA-5E55-4CC4-9746-194A4188960A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3ED01B4E-F705-475F-ADF1-15D98A1CFFFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3ED01B4E-F705-475F-ADF1-15D98A1CFFFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3ED01B4E-F705-475F-ADF1-15D98A1CFFFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3ED01B4E-F705-475F-ADF1-15D98A1CFFFF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87F70365-38DD-4F51-B94A-C81147EE3914}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87F70365-38DD-4F51-B94A-C81147EE3914}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87F70365-38DD-4F51-B94A-C81147EE3914}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87F70365-38DD-4F51-B94A-C81147EE3914}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
