@@ -53,7 +53,6 @@
             // animateButton
             // 
             this.animateButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.animateButton.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.animateButton.Enabled = false;
             this.animateButton.Location = new System.Drawing.Point(577, 430);
             this.animateButton.Name = "animateButton";

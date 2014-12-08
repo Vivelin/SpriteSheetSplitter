@@ -122,10 +122,16 @@ namespace SpriteSheetSplitter.UI
             using (var animationForm = new AnimationForm(spriteSheet))
             {
                 Hide();
-                if (animationForm.ShowDialog(this) != DialogResult.Cancel)
-                    Close();
-                else
+
+                var result = animationForm.ShowDialog(this);
+                if (result == DialogResult.Retry)
+                {
                     Show();
+                }
+                else
+                {
+                    DialogResult = result;
+                }
             }            
         }
     }

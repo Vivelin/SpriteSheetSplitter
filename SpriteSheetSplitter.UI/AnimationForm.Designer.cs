@@ -46,6 +46,7 @@
             this.imagePanel = new SpriteSheetSplitter.UI.Controls.DoubleBufferedPanel();
             this.imageBox = new System.Windows.Forms.PictureBox();
             this.saveButton = new System.Windows.Forms.Button();
+            this.backButton = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.scaleInput)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.delayInput)).BeginInit();
@@ -149,8 +150,7 @@
             // saveButton
             // 
             this.saveButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.saveButton.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.saveButton.Location = new System.Drawing.Point(577, 430);
+            this.saveButton.Location = new System.Drawing.Point(496, 430);
             this.saveButton.Name = "saveButton";
             this.saveButton.Size = new System.Drawing.Size(75, 23);
             this.saveButton.TabIndex = 3;
@@ -158,12 +158,25 @@
             this.saveButton.UseVisualStyleBackColor = true;
             this.saveButton.Click += new System.EventHandler(this.saveButton_Click);
             // 
+            // backButton
+            // 
+            this.backButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.backButton.DialogResult = System.Windows.Forms.DialogResult.Retry;
+            this.backButton.Location = new System.Drawing.Point(577, 430);
+            this.backButton.Name = "backButton";
+            this.backButton.Size = new System.Drawing.Size(75, 23);
+            this.backButton.TabIndex = 4;
+            this.backButton.Text = "Back";
+            this.backButton.UseVisualStyleBackColor = true;
+            // 
             // AnimationForm
             // 
             this.AcceptButton = this.saveButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.CancelButton = this.backButton;
             this.ClientSize = new System.Drawing.Size(664, 465);
+            this.Controls.Add(this.backButton);
             this.Controls.Add(this.saveButton);
             this.Controls.Add(this.imagePanel);
             this.Controls.Add(this.panel1);
@@ -190,5 +203,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.NumericUpDown scaleInput;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button backButton;
     }
 }

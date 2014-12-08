@@ -103,7 +103,7 @@ namespace SpriteSheetSplitter.UI
                 if (dialog.ShowDialog(this) == DialogResult.OK)
                 {
                     animation.Save(dialog.FileName);
-                    Close();
+                    DialogResult = DialogResult.OK;
                 }
             }
         }
