@@ -133,7 +133,7 @@ namespace SpriteSheetSplitter.UI
                 }
                 else
                 {
-                    DialogResult = result;
+                    Close();
                 }
             }            
         }
