@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -63,7 +64,8 @@ namespace SpriteSheetSplitter.UI
             spriteSheet = SpriteSheet.FromFile(path);
             spriteSheet.TileSize = new System.Drawing.Size(24, 24);
 
-            Text = System.IO.Path.GetFileName(fileName);
+            Text = System.IO.Path.GetFileName(fileName) 
+                + " - Sprite Sheet Editor";
             spriteSheetImage.Image = spriteSheet.Bitmap;
 
             OnFileLoaded();
@@ -121,6 +123,7 @@ namespace SpriteSheetSplitter.UI
         {
             using (var animationForm = new AnimationForm(spriteSheet))
             {
+                animationForm.FileName = Path.ChangeExtension(fileName, ".gif");
                 Hide();
 
                 var result = animationForm.ShowDialog(this);
