@@ -12,17 +12,30 @@ using SpriteSheetSplitter.Transformations;
 
 namespace SpriteSheetSplitter.UI
 {
+    /// <summary>
+    /// Represents a dialog where an <see cref="Animation"/> can be edited.
+    /// </summary>
     public partial class AnimationForm : Form, IDisposable
     {
         private Animation animation;
         private Stream preview;
         private string fileName;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AnimationForm"/> class.
+        /// </summary>
         public AnimationForm()
         {
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AnimationForm"/> class
+        /// using the specified <see cref="SpriteSheet"/> as animation source.
+        /// </summary>
+        /// <param name="spriteSheet">
+        /// The <see cref="SpriteSheet"/> object to use as animation source.
+        /// </param>
         public AnimationForm(SpriteSheet spriteSheet)
             : this()
         {
@@ -102,6 +115,12 @@ namespace SpriteSheetSplitter.UI
                 handler(this, EventArgs.Empty);
         }
 
+        /// <summary>
+        /// Updates the form to display a new <see cref="Animation"/> object.
+        /// </summary>
+        /// <param name="animation">
+        /// The <see cref="Animation"/> to display for editing.
+        /// </param>
         protected void LoadFormData(Animation animation)
         {
             this.animation = animation;
@@ -116,6 +135,9 @@ namespace SpriteSheetSplitter.UI
             RenderPreview();
         }
 
+        /// <summary>
+        /// Displays or updates the preview animation.
+        /// </summary>
         protected void RenderPreview()
         {
             if (preview != null)
