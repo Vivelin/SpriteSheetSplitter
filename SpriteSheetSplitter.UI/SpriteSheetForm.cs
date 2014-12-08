@@ -61,6 +61,7 @@ namespace SpriteSheetSplitter.UI
         {
             fileName = path;
             spriteSheet = SpriteSheet.FromFile(path);
+            spriteSheet.TileSize = new System.Drawing.Size(24, 24);
 
             Text = System.IO.Path.GetFileName(fileName);
             spriteSheetImage.Image = spriteSheet.Bitmap;

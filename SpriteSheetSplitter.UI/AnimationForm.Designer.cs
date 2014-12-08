@@ -107,7 +107,7 @@
             this.delayInput.Size = new System.Drawing.Size(141, 23);
             this.delayInput.TabIndex = 1;
             this.delayInput.Value = new decimal(new int[] {
-            167,
+            17,
             0,
             0,
             0});
@@ -118,9 +118,9 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(3, 1);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(66, 15);
+            this.label1.Size = new System.Drawing.Size(84, 15);
             this.label1.TabIndex = 0;
-            this.label1.Text = "&Delay (ms):";
+            this.label1.Text = "&Delay (1/100s):";
             // 
             // imagePanel
             // 

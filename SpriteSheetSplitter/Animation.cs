@@ -15,7 +15,7 @@ namespace SpriteSheetSplitter
     public class Animation : IDisposable
     {
         private SpriteSheet spriteSheet;
-        private int delay = 80;
+        private int delay = 16;
         private Color transparentColor = Color.Violet;
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace SpriteSheetSplitter
 
         /// <summary>
         /// Gets or sets the delay between the animation's frames in 
-        /// milliseconds.
+        /// hundreths of a second.
         /// </summary>
         public int Delay
         {

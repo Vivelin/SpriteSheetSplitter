@@ -86,18 +86,18 @@ namespace Gif.Components
         }
 
         /// <summary>
-        /// Gets or sets the delay time in milliseconds between each frame for the last frame 
-        /// added and any subsequent frames.
+        /// Gets or sets the delay time in hundreths of a second between each 
+        /// frame for the last frame added and any subsequent frames.
         /// </summary>
         public int Delay
         {
-            get { return (int)(delay * 10.0f); }
-            set { delay = (int)Math.Round(value / 10.0f); }
+            get { return delay; }
+            set { delay = value; }
         }
 
         /// <summary>
-        /// Gets or sets frame rate in frames per second. Equivalent to setting <c>Delay</c> to 
-        /// <c>1000/fps</c>.
+        /// Gets or sets frame rate in frames per second. Equivalent to setting
+        /// <c>Delay</c> to <c>100/fps</c>.
         /// </summary>
         public float FrameRate
         {

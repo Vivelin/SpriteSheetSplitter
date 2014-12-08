@@ -39,9 +39,9 @@
             this.label1 = new System.Windows.Forms.Label();
             this.mainMenu = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.imagePanel = new SpriteSheetSplitter.UI.Controls.DoubleBufferedPanel();
             this.spriteSheetImage = new System.Windows.Forms.PictureBox();
-            this.openImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.propertiesPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.frameHeightInput)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.frameWidthInput)).BeginInit();
@@ -130,7 +130,7 @@
             this.frameHeightInput.Size = new System.Drawing.Size(141, 23);
             this.frameHeightInput.TabIndex = 3;
             this.frameHeightInput.Value = new decimal(new int[] {
-            8,
+            24,
             0,
             0,
             0});
@@ -163,7 +163,7 @@
             this.frameWidthInput.Size = new System.Drawing.Size(141, 23);
             this.frameWidthInput.TabIndex = 1;
             this.frameWidthInput.Value = new decimal(new int[] {
-            8,
+            24,
             0,
             0,
             0});
@@ -197,6 +197,15 @@
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "&File";
             // 
+            // openImageToolStripMenuItem
+            // 
+            this.openImageToolStripMenuItem.Image = global::SpriteSheetSplitter.UI.Properties.Resources.Open_6529;
+            this.openImageToolStripMenuItem.Name = "openImageToolStripMenuItem";
+            this.openImageToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
+            this.openImageToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
+            this.openImageToolStripMenuItem.Text = "&Open image...";
+            this.openImageToolStripMenuItem.Click += new System.EventHandler(this.openImageToolStripMenuItem_Click);
+            // 
             // imagePanel
             // 
             this.imagePanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -221,15 +230,6 @@
             this.spriteSheetImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.spriteSheetImage.TabIndex = 0;
             this.spriteSheetImage.TabStop = false;
-            // 
-            // openImageToolStripMenuItem
-            // 
-            this.openImageToolStripMenuItem.Image = global::SpriteSheetSplitter.UI.Properties.Resources.Open_6529;
-            this.openImageToolStripMenuItem.Name = "openImageToolStripMenuItem";
-            this.openImageToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.openImageToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
-            this.openImageToolStripMenuItem.Text = "&Open image...";
-            this.openImageToolStripMenuItem.Click += new System.EventHandler(this.openImageToolStripMenuItem_Click);
             // 
             // SpriteSheetForm
             // 
